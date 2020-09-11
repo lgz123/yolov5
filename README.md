@@ -1,13 +1,15 @@
-#yolov5汉化版
-##简介
+# yolov5汉化版
+## 简介
 本仓库Fork自Ultralytics公司出品的yolov5，原仓库地址为：[ultralytics/yolov5](https://github.com/ultralytics/yolov5) ，**所有版权均属于原仓库作者所有**，请参见原仓库[License](https://github.com/ultralytics/yolov5/blob/master/LICENSE)。本人汉化自用，也方便各位国人使用。
 
-首先，yolov5按大小分为四个模型yolov5s、yolov5m、yolov5l、yolov5x，这四个模型的表现见下图：
+####1. 模型效果
+yolov5按大小分为四个模型yolov5s、yolov5m、yolov5l、yolov5x，这四个模型的表现见下图：
 
-<img src="https://user-images.githubusercontent.com/26833433/90187293-6773ba00-dd6e-11ea-8f90-cd94afc0427f.png" width="1000">
+<img src="https://user-images.githubusercontent.com/26833433/90187293-6773ba00-dd6e-11ea-8f90-cd94afc0427f.png" width="1000">  
+
 上图为基于5000张COCO val2017图像进行推理时，每张图像的平均端到端时间，batch size = 32, GPU：Tesla V100，这个时间包括图像预处理，FP16推理，后处理和NMS（非极大值抑制）。 EfficientDet的数据是从 [google/automl](https://github.com/google/automl) 仓库得到的（batch size = 8）。
 
-#####这是yolov5几个版本的更新：
+####2. yolov5版本：
 
 - 2020年8月13日: [v3.0 release](https://github.com/wudashuo/yolov5/releases/tag/v3.0)
 - 2020年7月23日: [v2.0 release](https://github.com/wudashuo/yolov5/releases/tag/v2.0)
@@ -31,17 +33,18 @@ $ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
 
 ## 训练
-
-下载 [COCO数据集](https://github.com/ultralytics/yolov5/blob/master/data/scripts/get_coco.sh)，然后执行下面命令. 根据你的显卡情况，使用最大的 `--batch-size` ，(下列命令中的batch size是16G显存的显卡推荐值).
+#### 1. 快速训练/复现训练
+下载 [COCO数据集](https://github.com/ultralytics/yolov5/blob/master/data/scripts/get_coco.sh)，然后执行下面命令。根据你的显卡情况，使用最大的 `--batch-size` ，(下列命令中的batch size是16G显存的显卡推荐值).
 ```bash
 $ python train.py --data coco.yaml --cfg yolov5s.yaml --weights '' --batch-size 64
-                                         yolov5m.yaml                   	    40
+                                         yolov5m.yaml                           40
                                          yolov5l.yaml                       	24
                                          yolov5x.yaml                       	16
 ```
 四个模型yolov5s/m/l/x使用COCO数据集在单个V100显卡上的训练时间为2/4/6/8天。
 <img src="https://user-images.githubusercontent.com/26833433/90222759-949d8800-ddc1-11ea-9fa1-1c97eed2b963.png" width="900">
-
+#### 2. 自定义训练
+**TODO**
 
 ## 推理（检测）
 推理支持多种模式，图片、视频、文件夹、rtsp视频流和流媒体都支持。
@@ -66,10 +69,25 @@ $ python detect.py --source 0  # 本机默认摄像头
 $ python detect.py --source ./inference/images/ --weights ./weights/yolov5s.pt --conf 0.5
 ```
 
-#### 3. 各个参数说明：TODO
+#### 3. 各个参数说明
+- `--weights` 指定权重
+- `--source` 指定检测来源(**必须**)
+- `--output` 指定输出文件夹
+- `--img-size` 指定推理图片分辨率，默认640
+- `--conf-thres` 指定置信度阈值，默认0.4
+- `--iou-thres` 指定NMS(非极大值抑制)的IOU阈值
+- `--device` 指定设备，如`--device 0` `--device 0,1,2,3` `--device cpu`
+- `--view-img` 显示结果
+- `--save-txt` 保存结果为txt
+- `--classes` 只检测特定的类，如`--classes 0 2 4 6 8`
+- `--agnostic-nms` 只检测前景
+- `--augment` 增强识别
+- `--update` 更新所有模型
 
 ## 测试
-1. 首先明确，推理是直接检测图片，而测试是需要图片有相应的真实标签的，相当于检测图片后再把推理标签和真实标签做
+1. 首先明确，推理是直接检测图片，而测试是需要图片有相应的真实标签的，相当于检测图片后再把推理标签和真实标签做  
+
+**TODO**
 
 
 ## 联系方式
