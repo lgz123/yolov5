@@ -1,6 +1,6 @@
-#yolov5汉化版
+# yolov5汉化版
 
-##简介
+## 简介
 
 本仓库Fork自Ultralytics公司出品的yolov5，原仓库地址为：[ultralytics/yolov5](https://github.com/ultralytics/yolov5) ，**所有版权均属于原仓库作者所有**，请参见原仓库[License](https://github.com/ultralytics/yolov5/blob/master/LICENSE)。本人汉化自用，也方便各位国人使用。
 
