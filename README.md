@@ -70,22 +70,51 @@ $ python detect.py --source ./inference/images/ --weights ./weights/yolov5s.pt -
 ```
 
 #### 3. 各个参数说明
-- `--weights` 指定权重
+
+自己根据需要加各种参数。
+
+有参：
 - `--source` 指定检测来源(**必须**)
-- `--output` 指定输出文件夹
+- `--weights` 指定权重，不指定的话会使用yolov5sCOCO预训练权重
+- `--output` 指定输出文件夹，默认./inference/output
 - `--img-size` 指定推理图片分辨率，默认640
 - `--conf-thres` 指定置信度阈值，默认0.4
-- `--iou-thres` 指定NMS(非极大值抑制)的IOU阈值
+- `--iou-thres` 指定NMS(非极大值抑制)的IOU阈值，默认0.5
 - `--device` 指定设备，如`--device 0` `--device 0,1,2,3` `--device cpu`
-- `--view-img` 显示结果
-- `--save-txt` 保存结果为txt
 - `--classes` 只检测特定的类，如`--classes 0 2 4 6 8`
+
+无参：
+- `--view-img` 图片形式显示结果
+- `--save-txt` 输出标签结果(yolo格式)为txt
 - `--agnostic-nms` 只检测前景
 - `--augment` 增强识别
-- `--update` 更新所有模型
+- `--update` 更新所有模型  
+
 
 ## 测试
-1. 首先明确，推理是直接检测图片，而测试是需要图片有相应的真实标签的，相当于检测图片后再把推理标签和真实标签做  
+#### 1.测试命令
+首先明确，推理是直接检测图片，而测试是需要图片有相应的真实标签的，相当于检测图片后再把推理标签和真实标签做mAP计算。  
+使用`./weights/yolov5x.pt`权重检测`./data/coco.yaml`里定义的测试集，测试集图片分辨率resize成672。
+```bash
+$ python test.py --weights ./weights/yolov5x.pt --data ./data/coco.yaml --img 672
+```
+#### 2.各参数说明
+有参：
+- `--weights` 测试所用权重，默认yolov5sCOCO预训练权重模型
+- `--data` 测试所用的.yaml文件，默认使用`./data/coco128.yaml`
+- `--batch-size` 测试用的batch大小，默认32，这个大小对结果无影响
+- `--img-size` 测试集分辨率大小，默认640，建议使用更高分辨率
+- `--conf-thres`目标置信度阈值，默认0.001
+- `--iou-thres`NMS的IOU阈值，默认0.65
+- `--save-json`保存结果为json
+- `--task` 任务模式，train, val, 或者test,测试的话用`--task test`
+- `--device` 设备，
+- `--single-cls` 视为只有一类
+- `--augment` 增强识别
+- `--merge` 使用Merge NMS
+- `--verbose` 输出各个类别的mAP
+- `--save-txt` 输出标签结果(yolo格式)为txt
+
 
 **TODO**
 
