@@ -2,14 +2,14 @@
 ## 简介
 本仓库Fork自Ultralytics公司出品的yolov5，原仓库地址为：[ultralytics/yolov5](https://github.com/ultralytics/yolov5) ，**所有版权均属于原仓库作者所有**，请参见原仓库[License](https://github.com/ultralytics/yolov5/blob/master/LICENSE)。本人汉化自用，也方便各位国人使用。
 
-####1. 模型效果
+#### 1. 模型效果
 yolov5按大小分为四个模型yolov5s、yolov5m、yolov5l、yolov5x，这四个模型的表现见下图：
 
 <img src="https://user-images.githubusercontent.com/26833433/90187293-6773ba00-dd6e-11ea-8f90-cd94afc0427f.png" width="1000">  
 
 上图为基于5000张COCO val2017图像进行推理时，每张图像的平均端到端时间，batch size = 32, GPU：Tesla V100，这个时间包括图像预处理，FP16推理，后处理和NMS（非极大值抑制）。 EfficientDet的数据是从 [google/automl](https://github.com/google/automl) 仓库得到的（batch size = 8）。
 
-####2. yolov5版本：
+#### 2. yolov5版本：
 
 - 2020年8月13日: [v3.0 release](https://github.com/wudashuo/yolov5/releases/tag/v3.0)
 - 2020年7月23日: [v2.0 release](https://github.com/wudashuo/yolov5/releases/tag/v2.0)
@@ -54,11 +54,11 @@ yolo格式的标签为txt格式的文件，文件名跟对应的图片名一样�
 最终的标签文件应该是这样的：
 <img src="https://user-images.githubusercontent.com/26833433/78174482-307bb800-740e-11ea-8b09-840693671042.png" width="900">
 
-#####2.2 数据规范
+##### 2.2 数据规范
 不同于DarkNet版yolo，图片和标签要分开存放。yolov5的代码会根据图片找标签，具体形式的把图片路径`/images/*.jpg`替换为`/labels/*.txt`，所以要新建两个文件夹，一个名为`images`存放图片，一个名为`labels`存放标签txt文件，如分训练集、验证集和测试集的话，还要再新建各自的文件夹，如图：
 <img src="https://user-images.githubusercontent.com/26833433/83666389-bab4d980-a581-11ea-898b-b25471d37b83.jpg" width="900">
 
-#####2.3 准备yaml文件
+##### 2.3 准备yaml文件
 自定义训练需要修改两个.yaml文件，一个是模型文件，一个是数据文件。
 - 模型文件:可以根据你选择训练的模型，直接修改`./models`里的`yolov5s.yaml` / `yolov5m.yaml` / `yolov5l.yaml` / `yolov5x.yaml`文件，只需要将`nc: 80`中的80修改为你数据集的类别数。其他为模型结构不需要改。
 - 数据文件:根据`./data`文件夹里的coco数据文件，制作自己的数据文件，在数据文件中定义训练集、验证集、测试集路径；定义总类别数；定义类别名称
@@ -82,7 +82,7 @@ yolo格式的标签为txt格式的文件，文件名跟对应的图片名一样�
             'cell phone', 'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors', 
             'teddy bear', 'hair drier', 'toothbrush']
     ```
-#####2.4 进行训练
+##### 2.4 进行训练
 训练直接运行`train.py`即可，后面根据需要加上参数，`--weights`指定权重，`--cfg`指定模型文件，`--data`指定数据文件，`--batch-size`指定batch大小，`--epochs`指定epoch，`--device`指定设备。一个简单的训练语句：
 ```bash
 # 使用yolov5s模型训练coco128数据集5个epochs，batch size设为16
@@ -190,9 +190,6 @@ $ python test.py --weights ./weights/yolov5x.pt --data ./data/coco.yaml --img 67
 - `--merge` 使用Merge NMS
 - `--verbose` 输出各个类别的mAP
 - `--save-txt` 输出标签结果(yolo格式)为txt
-
-
-**TODO**
 
 
 ## 联系方式
