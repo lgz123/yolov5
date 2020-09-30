@@ -34,7 +34,7 @@ $ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
 ## 训练
 #### 1. 快速训练/复现训练
-下载 [COCO数据集](https://github.com/ultralytics/yolov5/blob/master/data/scripts/get_coco.sh)，然后执行下面命令。根据你的显卡情况，使用最大的 `--batch-size` ，(下列命令中的batch size是16G显存的显卡推荐值).
+下载 [COCO数据集](https://github.com/wudashuo/yolov5/blob/master/data/scripts/get_coco.sh)，然后执行下面命令。根据你的显卡情况，使用最大的 `--batch-size` ，(下列命令中的batch size是16G显存的显卡推荐值).
 ```bash
 $ python train.py --data coco.yaml --cfg yolov5s.yaml --weights '' --batch-size 64
                                          yolov5m.yaml                           40
@@ -83,22 +83,22 @@ yolo格式的标签为txt格式的文件，文件名跟对应的图片名一样�
             'teddy bear', 'hair drier', 'toothbrush']
     ```
 ##### 2.4 进行训练
-训练直接运行`train.py`即可，后面根据需要加上参数，`--weights`指定权重，`--cfg`指定模型文件，`--data`指定数据文件，`--batch-size`指定batch大小，`--epochs`指定epoch，`--device`指定设备。一个简单的训练语句：
+训练直接运行`train.py`即可，后面根据需要加上指令参数，`--weights`指定权重，`--cfg`指定模型文件，`--data`指定数据文件，`--batch-size`指定batch大小，`--epochs`指定epoch，`--device`指定设备。一个简单的训练语句：
 ```bash
 # 使用yolov5s模型训练coco128数据集5个epochs，batch size设为16
 $ python train.py --batch 16 --epochs 5 --data ./data/coco128.yaml --cfg ./models/yolov5s.yaml --weights ''
 ```
 #### 3. 训练指令说明
 有参：
-- `--weights` 指定权重，如果不加此参数会默认使用COCO预训的`yolov5s.pt`，`--weights ''`则会随机初始化权重，**必须**
-- `--cfg` 指定模型文件，**必须**
-- `--data` 指定数据文件，**必须**
+- `--weights` (**☆**)指定权重，如果不加此参数会默认使用COCO预训的`yolov5s.pt`，`--weights ''`则会随机初始化权重
+- `--cfg` (**☆**)指定模型文件
+- `--data` (**☆**)指定数据文件
 - `--hyp`指定超参数文件
-- `--epochs`指定epoch数，默认300，**必须**
-- `--batch-size` 指定batch大小，默认`16`，官方推荐越大越好，用你GPU能承受最大的`batch size`，**必须**
-- `--img-size` 指定训练图片大小，默认`640`
+- `--epochs` (**☆**)指定epoch数，默认300
+- `--batch-size` (**☆**)指定batch大小，默认`16`，官方推荐越大越好，用你GPU能承受最大的`batch size`，可简写为`--batch`
+- `--img-size` 指定训练图片大小，默认`640`，可简写为`--img`
 - `--name` 指定结果文件名，默认`result.txt`        
-- `--device` 指定训练设备，如`--device 0,1,2,3`
+- `--device` (**☆**)指定训练设备，如`--device 0,1,2,3`
 - `--local_rank` 分布式训练参数，不要自己修改
 - `--logdir` 指定训练过程存储路径，默认`./runs`
 - `--workers` 指定dataloader的workers数量，默认`8`
@@ -148,7 +148,7 @@ $ python detect.py --source ./inference/images/ --weights ./weights/yolov5s.pt -
 自己根据需要加各种指令。
 
 有参：
-- `--source` 指定检测来源(**必须**)
+- `--source` (**必须**)指定检测来源
 - `--weights` 指定权重，不指定的话会使用yolov5sCOCO预训练权重
 - `--output` 指定输出文件夹，默认./inference/output
 - `--img-size` 指定推理图片分辨率，默认640，也可使用`--img`
