@@ -11,6 +11,7 @@ yolov5按大小分为四个模型yolov5s、yolov5m、yolov5l、yolov5x，这四�
 
 #### 2. yolov5版本：
 
+- 2020年10月29日：[v3.1 release](https://github.com/ultralytics/yolov5/releases/tag/v3.1)
 - 2020年8月13日: [v3.0 release](https://github.com/wudashuo/yolov5/releases/tag/v3.0)
 - 2020年7月23日: [v2.0 release](https://github.com/wudashuo/yolov5/releases/tag/v2.0)
 - 2020年6月26日: [v1.0 release](https://github.com/wudashuo/yolov5/releases/tag/v1.0)
@@ -29,7 +30,14 @@ pip安装慢的，请配置镜像源，下面是清华的镜像源。
 $ pip install pip -U
 $ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 ```
-想配其他镜像源直接把网址替换即可，如阿里云：https://mirrors.aliyun.com/pypi/simple/
+想配其他镜像源直接把网址替换即可，以下是国内常用的镜像源：
+```yaml
+豆瓣 https://pypi.doubanio.com/simple/
+网易 https://mirrors.163.com/pypi/simple/
+阿里云 https://mirrors.aliyun.com/pypi/simple/
+腾讯云 https://mirrors.cloud.tencent.com/pypi/simple
+清华大学 https://pypi.tuna.tsinghua.edu.cn/simple/
+```
 
 
 ## 训练
@@ -99,7 +107,7 @@ $ python train.py --batch 16 --epochs 5 --data ./data/coco128.yaml --cfg ./model
 - `--img-size` 指定训练图片大小，默认`640`，可简写为`--img`
 - `--name` 指定结果文件名，默认`result.txt`        
 - `--device` (**☆**)指定训练设备，如`--device 0,1,2,3`
-- `--local_rank` 分布式训练参数，不要自己修改
+- `--local_rank` 分布式训练参数，不要自己修改！
 - `--logdir` 指定训练过程存储路径，默认`./runs`
 - `--workers` 指定dataloader的workers数量，默认`8`
 
@@ -150,7 +158,7 @@ $ python detect.py --source ./inference/images/ --weights ./weights/yolov5s.pt -
 有参：
 - `--source` (**必须**)指定检测来源
 - `--weights` 指定权重，不指定的话会使用yolov5sCOCO预训练权重
-- `--output` 指定输出文件夹，默认./inference/output
+- `--save-dir` 指定输出文件夹，默认./inference/output
 - `--img-size` 指定推理图片分辨率，默认640，也可使用`--img`
 - `--conf-thres` 指定置信度阈值，默认0.4，也可使用`--conf`
 - `--iou-thres` 指定NMS(非极大值抑制)的IOU阈值，默认0.5
@@ -160,8 +168,9 @@ $ python detect.py --source ./inference/images/ --weights ./weights/yolov5s.pt -
 无参：
 - `--view-img` 图片形式显示结果
 - `--save-txt` 输出标签结果(yolo格式)为txt
-- `--agnostic-nms` 只检测前景
-- `--augment` 增强识别
+- `--save-conf` 在输出标签结果txt中同样写入每个目标的置信度
+- `--agnostic-nms` 使用agnostic NMS
+- `--augment` 增强识别，[详情](https://github.com/ultralytics/yolov5/issues/303)
 - `--update` 更新所有模型  
 
 
@@ -187,13 +196,12 @@ $ python test.py --weights ./weights/yolov5x.pt --data ./data/coco.yaml --img 67
 - `--save-json`保存结果为json
 - `--single-cls` 视为只有一类
 - `--augment` 增强识别
-- `--merge` 使用Merge NMS
+~~- `--merge` 使用Merge NMS~~
 - `--verbose` 输出各个类别的mAP
 - `--save-txt` 输出标签结果(yolo格式)为txt
 
 
 ## 联系方式
-有任何问题请在[Issues](https://github.com/wudashuo/yolov5/issues)里提，方便大家都查看。
 如有代码bug请去[yolov5官方Issue](https://github.com/ultralytics/yolov5/issues)下提。
 
 个人联系方式：<wudashuo@gmail.com>
