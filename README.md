@@ -24,6 +24,8 @@ yolov5按大小分为四个模型yolov5s、yolov5m、yolov5l、yolov5x，这四�
 ## 依赖
 yolov5官方说Python版本需要≥3.8，但是我自用3.7也可以，但仍然推荐≥3.8。其他依赖都写在了[requirements.txt](https://github.com/wudashuo/yolov5/blob/master/requirements.txt) 里面。一键安装的话，打开命令行，cd到yolov5的文件夹里，输入：
 ```bash
+$ git clone https://github.com/ultralytics/yolov5
+$ cd yolov5
 $ pip install -r requirements.txt
 ```
 pip安装慢的，请配置镜像源，下面是清华的镜像源。
