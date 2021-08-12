@@ -1,26 +1,26 @@
 # yolov5汉化版
 ## 目录
-  * ###[简介](#简介)  
-    * ####[模型效果](#1-模型效果)
-    * ####[yolov5版本](2-yolov5版本)
-  * ###[依赖](#依赖)  
-  * ###[训练](#训练)  
-    * ####[快速复现](#1-快速复现)
-    * ####[自定义训练](#2-自定义训练)
-    * ####[训练指令说明](#3-训练指令说明)
-  * ###[检测](#检测)  
-    * ####[快速检测](#1-快速检测命令)
-    * ####[自定义检测](#2-自定义检测)
-    * ####[训练指令说明](#3-检测指令说明)
-  * ###[测试](#测试) 
-    * ####[测试命令](#1-测试命令)
-    * ####[各指令说明](#2-各指令说明)
+  * ### [简介](#简介)  
+    * #### [模型效果](#1-模型效果)
+    * #### [yolov5版本](#2-yolov5版本)
+  * ### [依赖](#依赖)  
+  * ### [训练](#训练)  
+    * #### [快速复现](#1-简单复现训练)
+    * #### [自定义训练](#2-自定义训练)
+    * #### [训练指令说明](#3-训练指令说明)
+  * ### [检测](#检测)  
+    * #### [快速检测](#1-简单检测命令)
+    * #### [自定义检测](#2-自定义检测)
+    * #### [训练指令说明](#3-检测指令说明)
+  * ### [测试](#测试) 
+    * #### [测试命令](#1-测试命令)
+    * #### [各指令说明](#2-各指令说明)
 
 ## 简介
-本仓库Fork自Ultralytics公司出品的yolov5，原仓库地址为：[ultralytics/yolov5](https://github.com/ultralytics/yolov5) ，所有版权均属于原仓库作者所有，请参见原仓库[License](https://github.com/ultralytics/yolov5/blob/master/LICENSE)
+本仓库Fork自Ultralytics公司出品的yolov5，原仓库地址为：[ultralytics/yolov5](https://github.com/ultralytics/yolov5) ，版权请参见原仓库[License](https://github.com/ultralytics/yolov5/blob/master/LICENSE)
 
 #### 1. 模型效果
-yolov5按从小到大分为四个模型yolov5s、yolov5m、yolov5l、yolov5x，这四个模型的表现见下图(v4.0版)：
+yolov5按从小到大分为四个模型yolov5s、yolov5m、yolov5l、yolov5x，这四个模型的表现见下图：
 
 <img src="https://user-images.githubusercontent.com/26833433/90187293-6773ba00-dd6e-11ea-8f90-cd94afc0427f.png" width="1000">  
 
@@ -67,7 +67,7 @@ $ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
 
 ## 训练
-#### 1. 快速复现
+#### 1. 简单复现训练
 直接执行下面命令。根据你的显卡情况，使用最大的 `--batch-size` ，(下列命令中的batch size是16G显存的显卡推荐值)。其中，`--cfg`为指定模型结构，`--weights`为指定初始化模型权重。
 ```bash
 $ python train.py --data coco.yaml --cfg yolov5s.yaml --weights '' --batch-size 64
@@ -170,7 +170,7 @@ $ python train.py --batch 16 --epochs 5 --data ./data/coco128.yaml --weights ./w
 
 ## 检测
 推理支持多种模式，图片、视频、文件夹、rtsp视频流和流媒体都支持。
-#### 1. 快速检测命令
+#### 1. 简单检测命令
 直接执行`detect.py`，指定一下要推理的目录即可，如果没有指定权重，会自动下载默认COCO预训练权重模型。手动下载：[Google Drive](https://drive.google.com/open?id=1Drs_Aiu7xx6S-ix95f9kNsA6ueKRpN2J)、[国内网盘待上传](待上传)。 
 推理结果默认会保存到 `./runs/detect`中。
 ```bash
