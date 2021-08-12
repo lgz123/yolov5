@@ -1,4 +1,21 @@
 # yolov5汉化版
+## 目录
+  * ###[简介](#简介)  
+    * ####[模型效果](#1-模型效果)
+    * ####[yolov5版本](2-yolov5版本)
+  * ###[依赖](#依赖)  
+  * ###[训练](#训练)  
+    * ####[快速复现](#1-快速复现)
+    * ####[自定义训练](#2-自定义训练)
+    * ####[训练指令说明](#3-训练指令说明)
+  * ###[检测](#检测)  
+    * ####[快速检测](#1-快速检测命令)
+    * ####[自定义检测](#2-自定义检测)
+    * ####[训练指令说明](#3-检测指令说明)
+  * ###[测试](#测试) 
+    * ####[测试命令](#1-测试命令)
+    * ####[各指令说明](#2-各指令说明)
+
 ## 简介
 本仓库Fork自Ultralytics公司出品的yolov5，原仓库地址为：[ultralytics/yolov5](https://github.com/ultralytics/yolov5) ，所有版权均属于原仓库作者所有，请参见原仓库[License](https://github.com/ultralytics/yolov5/blob/master/LICENSE)
 
@@ -77,8 +94,10 @@ yolo格式的标签为txt格式的文件，文件名跟对应的图片名一样�
 
 ##### 2.3 准备yaml文件
 自定义训练需要修改.yaml文件，一个是模型文件(可选)，一个是数据文件。
-- **模型文件(可选)**:可以根据你选择训练的模型，直接修改`./models`里的`yolov5s.yaml` / `yolov5m.yaml` / `yolov5l.yaml` / `yolov5x.yaml`文件，只需要将`nc: 80`中的80修改为你数据集的类别数。其他为模型结构不需要改。
-**注意** :当需要随机初始化时才会使用本文件，官方推荐使用预训练权重初始化。
+- **模型文件(可选)**:可以根据你选择训练的模型，根据需要修改`./models`里的`yolov5s.yaml` / `yolov5m.yaml` / `yolov5l.yaml` / `yolov5x.yaml`文件，  
+**注意** :当需要随机初始化或者修改模型结构时才会使用本文件，如未修改模型结构，推荐使用预训练权重初始化，  
+  如`python3 train.py --weights yolov5s.pt`,   
+  而不是`python3 train.py --weights '' --cfg yolov5s.yaml`
 - **数据文件**:根据`./data`文件夹里的coco数据文件，制作自己的数据文件，在数据文件中定义训练集、验证集、测试集路径；定义总类别数；定义类别名称
     ```yaml
     # train and val data as 1) directory: path/images/, 2) file: path/images.txt, or 3) list: [path1/images/, path2/images/]
@@ -116,8 +135,8 @@ $ python train.py --batch 16 --epochs 5 --data ./data/coco128.yaml --weights ./w
 - `--hyp`指定超参数文件
 - `--epochs` (⭐)指定epoch数，默认300
 - `--batch-size` (⭐)指定batch大小，默认`16`，官方推荐越大越好，用你GPU能承受最大的`batch size`，可简写为`--batch`
-- `--img-size` (⭐)指定训练图片大小，默认`640`，可简写为`--img`
-- `--name` 指定结果文件名，默认`result.txt`        
+- `--img-size` `--img` `--imgsz`(⭐)指定训练图片大小，默认`640`
+- `--cache` 缓存到`ram`或者`disk`已加速训练 
 - `--device` (⭐)指定训练设备，如`--device 0,1,2,3`
 - `--local_rank` 分布式训练参数，不要自己修改！
 - `--workers` 指定dataloader的workers数量，默认`8`
@@ -127,16 +146,16 @@ $ python train.py --batch 16 --epochs 5 --data ./data/coco128.yaml --weights ./w
 - `--bbox_interval` 设置W&B的标签图片显示间隔？没用过
 - `--save_period` 设置多少个epoch保存一次模型
 - `--artifact_alias` W&B用哪个版本的数据集
+- `--freeze` 冻结模型层数，默认0不冻结，冻结主干网就传10，冻结所有就传24
 
 无参指令： 
 - `--rect`矩形训练
 - `--resume` 继续训练，默认从最后一次训练继续
 - `--nosave` 训练中途不存储模型，只存最后一个checkpoint
-- `--notest` 训练中途不在验证集上测试，训练完毕再测试
+- `--noval` 训练中途不在验证集上测试，训练完毕再测试
 - `--noautoanchor` 关闭自动锚点检测
-- `--evolve`超参数演变
-- `--bucket`使用gsutil bucket
-- `--cache-images` 使用缓存图片训练
+- `--evolve` 超参数演变
+- `--bucket`使用谷歌gsutil bucket
 - `--image-weights` 训练中对图片加权重
 - `--multi-scale` 训练图片大小+/-50%变换
 - `--single-cls` 单类训练
@@ -153,8 +172,7 @@ $ python train.py --batch 16 --epochs 5 --data ./data/coco128.yaml --weights ./w
 推理支持多种模式，图片、视频、文件夹、rtsp视频流和流媒体都支持。
 #### 1. 快速检测命令
 直接执行`detect.py`，指定一下要推理的目录即可，如果没有指定权重，会自动下载默认COCO预训练权重模型。手动下载：[Google Drive](https://drive.google.com/open?id=1Drs_Aiu7xx6S-ix95f9kNsA6ueKRpN2J)、[国内网盘待上传](待上传)。 
-推理结果默认会保存到 `./runs/detect`中。  
-注意：每次推理会清空output文件夹，注意留存推理结果。
+推理结果默认会保存到 `./runs/detect`中。
 ```bash
 # 快速推理，--source 指定检测源，以下任意一种类型都支持：
 $ python detect.py --source 0  # 本机默认摄像头
@@ -193,6 +211,7 @@ $ python detect.py --source ./data/images/ --weights ./weights/yolov5s.pt --conf
 - `--save-txt` 输出标签结果(yolo格式)
 - `--save-conf` 在输出标签结果txt中同样写入每个目标的置信度
 - `--save-crop` 从图片\视频上把检测到的目标抠出来保存
+- `--nosave` 不保存图片/视频
 - `--agnostic-nms` 使用agnostic NMS(前背景)
 - `--augment` 增强识别，速度会慢不少。[详情](https://github.com/ultralytics/yolov5/issues/303)
 - `--update` 更新所有模型  
@@ -203,13 +222,14 @@ $ python detect.py --source ./data/images/ --weights ./weights/yolov5s.pt --conf
 
 
 ## 测试
-#### 1.测试命令
+注意：测试代码已由`test.py`改名为`val.py`
+#### 1. 测试命令
 首先明确，推理是直接检测图片，而测试是需要图片有相应的真实标签的，相当于检测图片后再把推理标签和真实标签做mAP计算。  
-使用`./weights/yolov5x.pt`权重检测`./data/coco.yaml`里定义的测试集，图片分辨率设为672。
+例如使用`./weights/yolov5x.pt`权重检测`./data/coco.yaml`里定义的测试集，图片分辨率设为672。
 ```bash
-$ python test.py --weights ./weights/yolov5x.pt --data ./data/coco.yaml --img 672
+$ python val.py --weights ./weights/yolov5x.pt --data ./data/coco.yaml --img 672
 ```
-#### 2.各指令说明
+#### 2. 各指令说明
 有参：
 - `--weights` (⭐)测试所用权重，默认yolov5sCOCO预训练权重模型
 - `--data` (⭐)测试所用的.yaml文件，默认使用`./data/coco128.yaml`
@@ -217,13 +237,13 @@ $ python test.py --weights ./weights/yolov5x.pt --data ./data/coco.yaml --img 67
 - `--img-size` `--imgsz` `--img` 测试集分辨率大小，默认640，测试建议使用训练分辨率
 - `--conf-thres`目标置信度阈值，默认0.001
 - `--iou-thres`NMS的IOU阈值，默认0.65
-- `--task` 指定任务模式，train, val, test或者study
+- `--task` 指定任务模式，train, val, test, speed或者study
 - `--device` 指定设备，如`--device 0` `--device 0,1,2,3` `--device cpu`
 - `--project` 指定结果存放路径，默认./runs/test/
 - `--name` 指定结果存放名,默认exp
 
 无参：
-- `--single-cls` 视为只有一类
+- `--single-cls` 所有类别视为一类
 - `--augment` 增强识别
 - `--verbose` 输出各个类别的mAP
 - `--save-txt` 输出标签结果(yolo格式)
