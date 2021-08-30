@@ -1,9 +1,12 @@
-# Model validation metrics
+# YOLOv5 🚀 by Ultralytics, GPL-3.0 license
+"""
+Model validation metrics
+"""
 
+import math
 import warnings
 from pathlib import Path
 
-import math
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -88,8 +91,8 @@ def compute_ap(recall, precision):
     """
 
     # Append sentinel values to beginning and end
-    mrec = np.concatenate(([0.], recall, [recall[-1] + 0.01]))
-    mpre = np.concatenate(([1.], precision, [0.]))
+    mrec = np.concatenate(([0.0], recall, [1.0]))
+    mpre = np.concatenate(([1.0], precision, [0.0]))
 
     # Compute the precision envelope
     mpre = np.flip(np.maximum.accumulate(np.flip(mpre)))
