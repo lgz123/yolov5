@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from tqdm import tqdm
 
-FILE = Path(__file__).absolute()
+FILE = Path(__file__).resolve()
 sys.path.append(FILE.parents[3].as_posix())  # add yolov5/ to path
 
 from utils.datasets import LoadImagesAndLabels
@@ -112,7 +112,7 @@ class WandbLogger():
     https://docs.wandb.com/guides/integrations/yolov5
     """
 
-    def __init__(self, opt, run_id, job_type='Training'):
+    def __init__(self, opt, run_id=None, job_type='Training'):
         """
         - Initialize WandbLogger instance
         - Upload dataset if opt.upload_dataset is True
