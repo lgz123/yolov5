@@ -1,18 +1,18 @@
 # yolov5汉化版
 ## 目录
-  * ### [简介](#简介)  
+  * ### [简介](#简介-1)  
     * #### [模型效果](#1-模型效果)
     * #### [yolov5版本](#2-yolov5版本)
-  * ### [依赖](#依赖)  
-  * ### [训练](#训练)  
-    * #### [快速复现](#1-简单复现训练)
+  * ### [依赖](#依赖-1)  
+  * ### [训练](#训练-1)  
+    * #### [简单复现训练](#1-简单复现训练)
     * #### [自定义训练](#2-自定义训练)
     * #### [训练指令说明](#3-训练指令说明)
-  * ### [检测](#检测)  
-    * #### [快速检测](#1-简单检测命令)
+  * ### [检测](#检测-1)  
+    * #### [简单检测命令](#1-简单检测命令)
     * #### [自定义检测](#2-自定义检测)
     * #### [训练指令说明](#3-检测指令说明)
-  * ### [测试](#测试) 
+  * ### [测试](#测试-1) 
     * #### [测试命令](#1-测试命令)
     * #### [各指令说明](#2-各指令说明)
 
@@ -136,7 +136,7 @@ $ python train.py --batch 16 --epochs 5 --data ./data/coco128.yaml --weights ./w
 - `--epochs` (⭐)指定epoch数，默认300
 - `--batch-size` (⭐)指定batch大小，默认`16`，官方推荐越大越好，用你GPU能承受最大的`batch size`，可简写为`--batch`
 - `--img-size` `--img` `--imgsz`(⭐)指定训练图片大小，默认`640`
-- `--cache` 缓存到`ram`或者`disk`已加速训练 
+- `--cache` 缓存到`ram`或者`disk`以加速训练 
 - `--device` (⭐)指定训练设备，如`--device 0,1,2,3`
 - `--local_rank` 分布式训练参数，不要自己修改！
 - `--workers` 指定dataloader的workers数量，默认`8`
@@ -147,6 +147,7 @@ $ python train.py --batch 16 --epochs 5 --data ./data/coco128.yaml --weights ./w
 - `--save_period` 设置多少个epoch保存一次模型
 - `--artifact_alias` W&B用哪个版本的数据集
 - `--freeze` 冻结模型层数，默认0不冻结，冻结主干网就传10，冻结所有就传24
+- `--patience` 多少个epoch没有提升就终止训练，默认100
 
 无参指令： 
 - `--rect`矩形训练
@@ -171,7 +172,7 @@ $ python train.py --batch 16 --epochs 5 --data ./data/coco128.yaml --weights ./w
 ## 检测
 推理支持多种模式，图片、视频、文件夹、rtsp视频流和流媒体都支持。
 #### 1. 简单检测命令
-直接执行`detect.py`，指定一下要推理的目录即可，如果没有指定权重，会自动下载默认COCO预训练权重模型。手动下载：[Google Drive](https://drive.google.com/open?id=1Drs_Aiu7xx6S-ix95f9kNsA6ueKRpN2J)、[国内网盘待上传](待上传)。 
+直接执行`detect.py`，指定一下要推理的目录即可，如果没有指定权重，会自动下载默认COCO预训练权重模型。手动下载：[Google Drive](https://drive.google.com/open?id=1Drs_Aiu7xx6S-ix95f9kNsA6ueKRpN2J) 、[阿里云盘下载地址](https://www.aliyundrive.com/s/JCmD6JobeCv) (目前阿里云盘不支持分享pt)。 
 推理结果默认会保存到 `./runs/detect`中。
 ```bash
 # 快速推理，--source 指定检测源，以下任意一种类型都支持：
@@ -214,6 +215,7 @@ $ python detect.py --source ./data/images/ --weights ./weights/yolov5s.pt --conf
 - `--nosave` 不保存图片/视频
 - `--agnostic-nms` 使用agnostic NMS(前背景)
 - `--augment` 增强识别，速度会慢不少。[详情](https://github.com/ultralytics/yolov5/issues/303)
+- `--visualize` 特征可视化
 - `--update` 更新所有模型  
 - `--exist-ok` 若重名不覆盖
 - `--hide-labels` 隐藏标签
