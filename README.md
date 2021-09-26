@@ -172,7 +172,7 @@ $ python train.py --batch 16 --epochs 5 --data ./data/coco128.yaml --weights ./w
 ## 检测
 推理支持多种模式，图片、视频、文件夹、rtsp视频流和流媒体都支持。
 #### 1. 简单检测命令
-直接执行`detect.py`，指定一下要推理的目录即可，如果没有指定权重，会自动下载默认COCO预训练权重模型。手动下载：[Google Drive](https://drive.google.com/open?id=1Drs_Aiu7xx6S-ix95f9kNsA6ueKRpN2J) 、[阿里云盘下载地址](https://www.aliyundrive.com/s/JCmD6JobeCv) (目前阿里云盘不支持分享pt)。 
+直接执行`detect.py`，指定一下要推理的目录即可，如果没有指定权重，会自动下载默认COCO预训练权重模型。手动下载：[Google Drive](https://drive.google.com/open?id=1Drs_Aiu7xx6S-ix95f9kNsA6ueKRpN2J) 、[阿里云盘下载地址](https://www.aliyundrive.com/s/xjxhgbMx12w) (将后缀jpg改为zip解压即可)。 
 推理结果默认会保存到 `./runs/detect`中。
 ```bash
 # 快速推理，--source 指定检测源，以下任意一种类型都支持：
