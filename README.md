@@ -20,16 +20,17 @@
 本仓库Fork自Ultralytics公司出品的yolov5，原仓库地址为：[ultralytics/yolov5](https://github.com/ultralytics/yolov5) ，版权请参见原仓库[License](https://github.com/ultralytics/yolov5/blob/master/LICENSE)
 
 #### 1. 模型效果
-yolov5按从小到大分为四个模型yolov5s、yolov5m、yolov5l、yolov5x，这四个模型的表现见下图：
+yolov5按从小到大分为五个模型yolov5n、yolov5s、yolov5m、yolov5l、yolov5x，这五个模型的表现见下图：
 
-<img src="https://user-images.githubusercontent.com/26833433/90187293-6773ba00-dd6e-11ea-8f90-cd94afc0427f.png" width="1000">  
+<img src="https://user-images.githubusercontent.com/26833433/136763877-b174052b-c12f-48d2-8bc4-545e3853398e.png" width="1000">  
 
-yolov5 v5.0版本新增四个模型，加入了P6层，因此模型名后面加了个6，四个模型效果分别为：
-<p align="left"><img width="1000" src="https://user-images.githubusercontent.com/26833433/114313216-f0a5e100-9af5-11eb-8445-c682b60da2e3.png"></p>
+在这五个模型基础上增加P6层，模型结构更深，四个模型效果分别为：
+<p align="left"><img width="1000" src="https://user-images.githubusercontent.com/26833433/136901921-abcfcd9d-f978-4942-9b97-0e3f202907df.png"></p>
 
 
 #### 2. yolov5版本：
 
+- 2021年10月12日：[v6.0 release](https://github.com/ultralytics/yolov5/releases/tag/v6.0)： 新增yolov5 nano模型，其他模型结构也有修改，模型转换/导出友好，精度基本不变，速度略有提升。
 - 2021年4月12日：[v5.0 release](https://github.com/ultralytics/yolov5/releases/tag/v5.0)
 - 2021年1月5日：[v4.0 release](https://github.com/ultralytics/yolov5/releases/tag/v4.0)
 - 2020年10月29日：[v3.1 release](https://github.com/ultralytics/yolov5/releases/tag/v3.1)
@@ -42,7 +43,7 @@ yolov5 v5.0版本新增四个模型，加入了P6层，因此模型名后面加�
 
 
 ## 依赖
-Python版本需要 ≥ 3.8，使用GPU的话要有CUDA环境。其他依赖都写在了[requirements.txt](https://github.com/wudashuo/yolov5/blob/master/requirements.txt) 里面。一键安装依赖的话，打开命令行，cd到yolov5的文件夹里，输入：
+Python版本需要 ≥ 3.6.0，使用GPU的话要有CUDA环境。其他依赖都写在了[requirements.txt](https://github.com/wudashuo/yolov5/blob/master/requirements.txt) 里面。一键安装依赖的话，打开命令行，cd到yolov5的文件夹里，输入：
 ```bash
 $ pip install -r requirements.txt
 ```
@@ -63,7 +64,11 @@ $ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 **注意**：
 1. Windows版在检测(`detect.py`)时可能有问题，请尽量在Linux或者MacOS使用本工程。如果你是CUDA11，且检测不出框，则降级到CUDA10.2，然后重装Pytorch1.8.1+cu102试试。
-2. pip安装pycocotools需要有C++编译环境，不对COCO数据集进行操作的话也可以不安装pycocotools，我已在`requirements.txt`里注释掉了，默认不安装，如有需要自行安装。
+2. 不想自己配环境的可以用colab或者docker,下面是几个免费环境：
+- **Google Colab and Kaggle** : <a href="https://colab.research.google.com/github/ultralytics/yolov5/blob/master/tutorial.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a> <a href="https://www.kaggle.com/ultralytics/yolov5"><img src="https://kaggle.com/static/images/open-in-kaggle.svg" alt="Open In Kaggle"></a>
+- **Google Cloud** : [GCP 快速上手教程](https://github.com/ultralytics/yolov5/wiki/GCP-Quickstart)
+- **Amazon** Deep Learning AMI. See [AWS 快速上手教程](https://github.com/ultralytics/yolov5/wiki/AWS-Quickstart)
+- **Docker Image**. [Docker 快速上手教程](https://github.com/ultralytics/yolov5/wiki/Docker-Quickstart) <a href="https://hub.docker.com/r/ultralytics/yolov5"><img src="https://img.shields.io/docker/pulls/ultralytics/yolov5?logo=docker" alt="Docker Pulls"></a>
 
 
 ## 训练
@@ -75,8 +80,7 @@ $ python train.py --data coco.yaml --cfg yolov5s.yaml --weights '' --batch-size 
                                          yolov5l.yaml                       	24
                                          yolov5x.yaml                       	16
 ```
-四个模型yolov5s/m/l/x使用COCO数据集在单个V100显卡上的训练时间为2/4/6/8天。
-<img src="https://user-images.githubusercontent.com/26833433/90222759-949d8800-ddc1-11ea-9fa1-1c97eed2b963.png" width="900">
+
 #### 2. 自定义训练
 ##### 2.1 准备标签
 yolo格式的标签为txt格式的文件，文件名跟对应的图片名一样，除了后缀改为了.txt。
@@ -134,7 +138,7 @@ $ python train.py --batch 16 --epochs 5 --data ./data/coco128.yaml --weights ./w
 - `--data` (⭐)指定数据文件
 - `--hyp`指定超参数文件
 - `--epochs` (⭐)指定epoch数，默认300
-- `--batch-size` (⭐)指定batch大小，默认`16`，官方推荐越大越好，用你GPU能承受最大的`batch size`，可简写为`--batch`
+- `--batch-size` `--batch` (⭐)指定batch大小，默认`16`，传`-1`的话就是autobatch
 - `--img-size` `--img` `--imgsz`(⭐)指定训练图片大小，默认`640`
 - `--cache` 缓存到`ram`或者`disk`以加速训练 
 - `--device` (⭐)指定训练设备，如`--device 0,1,2,3`
@@ -221,6 +225,7 @@ $ python detect.py --source ./data/images/ --weights ./weights/yolov5s.pt --conf
 - `--hide-labels` 隐藏标签
 - `--hide-conf` 隐藏置信度
 - `--half` 半精度检测(FP16)
+- `--dnn` 在onnx推理中使用OpenCV DNN
 
 
 ## 测试
