@@ -42,6 +42,16 @@ FILE = Path(__file__).resolve()
 ROOT = FILE.parents[1]  # YOLOv5 root directory
 
 
+def set_logging(name=None, verbose=True):
+    # Sets level and returns logger
+    rank = int(os.getenv('RANK', -1))  # rank in world for Multi-GPU trainings
+    logging.basicConfig(format="%(message)s", level=logging.INFO if (verbose and rank in (-1, 0)) else logging.WARN)
+    return logging.getLogger(name)
+
+
+LOGGER = set_logging(__name__)  # define globally (used in train.py, val.py, detect.py, etc.)
+
+
 class Profile(contextlib.ContextDecorator):
     # Usage: @Profile() decorator or 'with Profile():' context manager
     def __enter__(self):
@@ -87,15 +97,9 @@ def methods(instance):
     return [f for f in dir(instance) if callable(getattr(instance, f)) and not f.startswith("__")]
 
 
-def set_logging(rank=-1, verbose=True):
-    logging.basicConfig(
-        format="%(message)s",
-        level=logging.INFO if (verbose and rank in [-1, 0]) else logging.WARN)
-
-
 def print_args(name, opt):
     # Print argparser arguments
-    print(colorstr(f'{name}: ') + ', '.join(f'{k}={v}' for k, v in vars(opt).items()))
+    LOGGER.info(colorstr(f'{name}: ') + ', '.join(f'{k}={v}' for k, v in vars(opt).items()))
 
 
 def init_seeds(seed=0):
@@ -136,7 +140,7 @@ def is_writeable(dir, test=False):
                 pass
             file.unlink()  # remove file
             return True
-        except IOError:
+        except OSError:
             return False
     else:  # method 2
         return os.access(dir, os.R_OK)  # possible issues on Windows
@@ -152,7 +156,7 @@ def is_colab():
     try:
         import google.colab
         return True
-    except Exception as e:
+    except ImportError:
         return False
 
 
@@ -162,9 +166,14 @@ def is_pip():
 
 
 def is_ascii(s=''):
-    # Is string composed of all ASCII (no UTF) characters?
+    # Is string composed of all ASCII (no UTF) characters? (note str().isascii() introduced in python 3.7)
     s = str(s)  # convert list, tuple, None, etc. to str
     return len(s.encode().decode('ascii', 'ignore')) == len(s)
+
+
+def is_chinese(s='人工智能'):
+    # Is string composed of any Chinese characters?
+    return re.search('[\u4e00-\u9fff]', s)
 
 
 def emojis(str=''):
@@ -215,14 +224,17 @@ def check_git_status():
 
 def check_python(minimum='3.6.2'):
     # Check current python version vs. required python version
-    check_version(platform.python_version(), minimum, name='Python ')
+    check_version(platform.python_version(), minimum, name='Python ', hard=True)
 
 
-def check_version(current='0.0.0', minimum='0.0.0', name='version ', pinned=False):
+def check_version(current='0.0.0', minimum='0.0.0', name='version ', pinned=False, hard=False):
     # Check version vs. required version
     current, minimum = (pkg.parse_version(x) for x in (current, minimum))
-    result = (current == minimum) if pinned else (current >= minimum)
-    assert result, f'{name}{minimum} required by YOLOv5, but {name}{current} is currently installed'
+    result = (current == minimum) if pinned else (current >= minimum)  # bool
+    if hard:  # assert min requirements met
+        assert result, f'{name}{minimum} required by YOLOv5, but {name}{current} is currently installed'
+    else:
+        return result
 
 
 @try_except
@@ -288,12 +300,14 @@ def check_imshow():
 
 
 def check_suffix(file='yolov5s.pt', suffix=('.pt',), msg=''):
-    # Check file(s) for acceptable suffixes
+    # Check file(s) for acceptable suffix
     if file and suffix:
         if isinstance(suffix, str):
             suffix = [suffix]
         for f in file if isinstance(file, (list, tuple)) else [file]:
-            assert Path(f).suffix.lower() in suffix, f"{msg}{f} acceptable suffix is {suffix}"
+            s = Path(f).suffix.lower()  # file suffix
+            if len(s):
+                assert s in suffix, f"{msg}{f} acceptable suffix is {suffix}"
 
 
 def check_yaml(file, suffix=('.yaml', '.yml')):
@@ -309,13 +323,15 @@ def check_file(file, suffix=''):
         return file
     elif file.startswith(('http:/', 'https:/')):  # download
         url = str(Path(file)).replace(':/', '://')  # Pathlib turns :// -> :/
-        file = Path(urllib.parse.unquote(file)).name.split('?')[0]  # '%2F' to '/', split https://url.com/file.txt?auth
+        file = Path(urllib.parse.unquote(file).split('?')[0]).name  # '%2F' to '/', split https://url.com/file.txt?auth
         print(f'Downloading {url} to {file}...')
         torch.hub.download_url_to_file(url, file)
         assert Path(file).exists() and Path(file).stat().st_size > 0, f'File download failed: {url}'  # check
         return file
     else:  # search
-        files = glob.glob('./**/' + file, recursive=True)  # find file
+        files = []
+        for d in 'data', 'models', 'utils':  # search directories
+            files.extend(glob.glob(str(ROOT / d / '**' / file), recursive=True))  # find file
         assert len(files), f'File not found: {file}'  # assert file was found
         assert len(files) == 1, f"Multiple files match '{file}', specify exact path: {files}"  # assert unique
         return files[0]  # return file
@@ -346,7 +362,7 @@ def check_dataset(data, autodownload=True):
     assert 'nc' in data, "Dataset 'nc' key missing."
     if 'names' not in data:
         data['names'] = [f'class{i}' for i in range(data['nc'])]  # assign class names if missing
-    train, val, test, s = [data.get(x) for x in ('train', 'val', 'test', 'download')]
+    train, val, test, s = (data.get(x) for x in ('train', 'val', 'test', 'download'))
     if val:
         val = [Path(x).resolve() for x in (val if isinstance(val, list) else [val])]  # val path
         if not all(x.exists() for x in val):
@@ -735,11 +751,11 @@ def print_mutation(results, hyp, save_dir, bucket):
         data = pd.read_csv(evolve_csv)
         data = data.rename(columns=lambda x: x.strip())  # strip keys
         i = np.argmax(fitness(data.values[:, :7]))  #
-        f.write(f'# YOLOv5 Hyperparameter Evolution Results\n' +
+        f.write('# YOLOv5 Hyperparameter Evolution Results\n' +
                 f'# Best generation: {i}\n' +
                 f'# Last generation: {len(data)}\n' +
-                f'# ' + ', '.join(f'{x.strip():>20s}' for x in keys[:7]) + '\n' +
-                f'# ' + ', '.join(f'{x:>20.5g}' for x in data.values[i, :7]) + '\n\n')
+                '# ' + ', '.join(f'{x.strip():>20s}' for x in keys[:7]) + '\n' +
+                '# ' + ', '.join(f'{x:>20.5g}' for x in data.values[i, :7]) + '\n\n')
         yaml.safe_dump(hyp, f, sort_keys=False)
 
     if bucket:
