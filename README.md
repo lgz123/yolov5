@@ -1,4 +1,12 @@
 # yolov5汉化版
+
+### 近期更新
+- **支持TensorRT模型的导出和推理了**  
+现在`export.py`支持导出的模型有：`TorchScript`, `ONNX`, `CoreML`, `TensorFlow SavedModel`, `Tensorflow GraphDef`, `TensorFlow Lite`, `Tensorflow.js`, `TensorRT`。  
+现在`detect.py`支持推理的格式有：`.pt`, `.torchscript.pt`, `.onnx`, `_saved_model`, `.pb`, `.tflite`, `.engine`。
+- 训练时Dataloder加载数据默认`shuffle=True`
+- [**v6.0 版本**](https://github.com/ultralytics/yolov5/releases/tag/v6.0) ： 新增yolov5 nano模型，其他模型结构也有修改，模型转换/导出友好，精度基本不变，速度略有提升。
+
 ## 目录
   * ### [简介](#简介-1)  
     * #### [模型效果](#1-模型效果)
@@ -20,17 +28,21 @@
 本仓库Fork自Ultralytics公司出品的yolov5，原仓库地址为：[ultralytics/yolov5](https://github.com/ultralytics/yolov5) ，版权请参见原仓库[License](https://github.com/ultralytics/yolov5/blob/master/LICENSE)
 
 #### 1. 模型效果
+<details>
+<summary>点击展开</summary>
+
 yolov5按从小到大分为五个模型yolov5n、yolov5s、yolov5m、yolov5l、yolov5x，这五个模型的表现见下图：
 
 <img src="https://user-images.githubusercontent.com/26833433/136763877-b174052b-c12f-48d2-8bc4-545e3853398e.png" width="1000">  
 
 在这五个模型基础上增加P6层，模型结构更深，四个模型效果分别为：
 <p align="left"><img width="1000" src="https://user-images.githubusercontent.com/26833433/136901921-abcfcd9d-f978-4942-9b97-0e3f202907df.png"></p>
+</details>
 
 
 #### 2. yolov5版本：
 
-- 2021年10月12日：[v6.0 release](https://github.com/ultralytics/yolov5/releases/tag/v6.0)： 新增yolov5 nano模型，其他模型结构也有修改，模型转换/导出友好，精度基本不变，速度略有提升。
+- 2021年10月12日：[v6.0 release](https://github.com/ultralytics/yolov5/releases/tag/v6.0) ： 新增yolov5 nano模型，其他模型结构也有修改，模型转换/导出友好，精度基本不变，速度略有提升。
 - 2021年4月12日：[v5.0 release](https://github.com/ultralytics/yolov5/releases/tag/v5.0)
 - 2021年1月5日：[v4.0 release](https://github.com/ultralytics/yolov5/releases/tag/v4.0)
 - 2020年10月29日：[v3.1 release](https://github.com/ultralytics/yolov5/releases/tag/v3.1)
@@ -62,13 +74,16 @@ $ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 腾讯云 https://mirrors.cloud.tencent.com/pypi/simple
 清华大学 https://pypi.tuna.tsinghua.edu.cn/simple/
 ```
-**注意**：
+<details>
+<summary><strong> 注意事项 </strong></summary>
+
 1. Windows版在检测(`detect.py`)时可能有问题，请尽量在Linux或者MacOS使用本工程。如果你是CUDA11，且检测不出框，则降级到CUDA10.2，然后重装Pytorch1.8.1+cu102试试。
 2. 不想自己配环境的可以用colab或者docker,下面是几个免费环境：
 - **Google Colab and Kaggle** : <a href="https://colab.research.google.com/github/ultralytics/yolov5/blob/master/tutorial.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a> <a href="https://www.kaggle.com/ultralytics/yolov5"><img src="https://kaggle.com/static/images/open-in-kaggle.svg" alt="Open In Kaggle"></a>
 - **Google Cloud** : [GCP 快速上手教程](https://github.com/ultralytics/yolov5/wiki/GCP-Quickstart)
 - **Amazon** Deep Learning AMI. See [AWS 快速上手教程](https://github.com/ultralytics/yolov5/wiki/AWS-Quickstart)
 - **Docker Image**. [Docker 快速上手教程](https://github.com/ultralytics/yolov5/wiki/Docker-Quickstart) <a href="https://hub.docker.com/r/ultralytics/yolov5"><img src="https://img.shields.io/docker/pulls/ultralytics/yolov5?logo=docker" alt="Docker Pulls"></a>
+</details>
 
 
 ## 训练
@@ -82,7 +97,10 @@ $ python train.py --data coco.yaml --cfg yolov5s.yaml --weights '' --batch-size 
 ```
 
 #### 2. 自定义训练
-##### 2.1 准备标签
+使用自己的训练集进行自定义训练，详情点击展开：
+<details>
+<summary> ① 准备标签 </summary>
+
 yolo格式的标签为txt格式的文件，文件名跟对应的图片名一样，除了后缀改为了.txt。
 具体格式如下：
 - 每个目标一行，整个图片没有目标的话不需要有txt文件，或者空文件。
@@ -91,12 +109,20 @@ yolo格式的标签为txt格式的文件，文件名跟对应的图片名一样�
 <img src="https://user-images.githubusercontent.com/26833433/91506361-c7965000-e886-11ea-8291-c72b98c25eec.jpg" width="900">
 最终的标签文件应该是这样的：
 <img src="https://user-images.githubusercontent.com/26833433/78174482-307bb800-740e-11ea-8b09-840693671042.png" width="900">
+</details>
 
-##### 2.2 数据存放规范
+
+<details>
+<summary> ② 数据存放规范 </summary>
+
 数据读取有三种形式，但是还是推荐下面这个存储方式。因为yolov5只需要给图片路径即可，代码会根据图片找标签，具体形式的把图片路径`/images/*.jpg`替换为`/labels/*.txt`，所以要新建两个文件夹，一个名为`images`存放图片，一个名为`labels`存放标签txt文件，如分训练集、验证集和测试集的话，还要再新建各自的文件夹，如图：
 <img src="https://user-images.githubusercontent.com/26833433/83666389-bab4d980-a581-11ea-898b-b25471d37b83.jpg" width="900">
+</details>
 
-##### 2.3 准备yaml文件
+
+<details>
+<summary> ③ 准备yaml文件 </summary>
+
 自定义训练需要修改.yaml文件，一个是模型文件(可选)，一个是数据文件。
 - **模型文件(可选)**:可以根据你选择训练的模型，根据需要修改`./models`里的`yolov5s.yaml` / `yolov5m.yaml` / `yolov5l.yaml` / `yolov5x.yaml`文件，  
 **注意** :当需要随机初始化或者修改模型结构时才会使用本文件，如未修改模型结构，推荐使用预训练权重初始化，  
@@ -123,16 +149,25 @@ yolo格式的标签为txt格式的文件，文件名跟对应的图片名一样�
             'cell phone', 'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors', 
             'teddy bear', 'hair drier', 'toothbrush']
     ```
-##### 2.4 进行训练
+</details>
+
+
+<details>
+<summary> ④ 进行训练 </summary>
+
 训练直接运行`train.py`即可，后面根据需要加上指令参数，`--weights`指定权重，`--data`指定数据文件，`--batch-size`指定batch大小，`--epochs`指定epoch。一个简单的训练语句：
 ```bash
 # 使用yolov5s模型训练coco128数据集5个epochs，batch size设为16
 $ python train.py --batch 16 --epochs 5 --data ./data/coco128.yaml --weights ./weights/yolov5s.pt
 ```
-#### 3. 训练指令说明
-新手的话只需要关注这几个加⭐的指令  
+</details>
 
-有参指令(后面要加相应参数)：
+
+#### 3. 训练指令说明
+各个训练指令的详细说明，新手的话只需要关注这几个加⭐的指令，点击展开：  
+<details>
+<summary> 有参指令(后面要加相应参数) </summary>
+
 - `--weights` (⭐)指定模型权重，如果不加此参数会默认使用COCO预训的`yolov5s.pt`作为初始化权重，`--weights ''`则会随机初始化权重
 - `--cfg` 指定模型文件，当使用`--weights ''`时，需用此命令指定模型文件。
 - `--data` (⭐)指定数据文件
@@ -152,8 +187,11 @@ $ python train.py --batch 16 --epochs 5 --data ./data/coco128.yaml --weights ./w
 - `--artifact_alias` W&B用哪个版本的数据集
 - `--freeze` 冻结模型层数，默认0不冻结，冻结主干网就传10，冻结所有就传24
 - `--patience` 多少个epoch没有提升就终止训练，默认100
+</details>
 
-无参指令： 
+
+<details><summary> 无参指令 </summary> 
+
 - `--rect`矩形训练
 - `--resume` 继续训练，默认从最后一次训练继续
 - `--nosave` 训练中途不存储模型，只存最后一个checkpoint
@@ -171,12 +209,13 @@ $ python train.py --batch 16 --epochs 5 --data ./data/coco128.yaml --weights ./w
 - `--quad` 使用四合一dataloader，详见原作者[说明](https://github.com/ultralytics/yolov5/issues/1898)
 - `--linear-lr` 线性学习率
 - `--upload_dataset` 上传数据集至W&B
+</details>
 
 
 ## 检测
 推理支持多种模式，图片、视频、文件夹、rtsp视频流和流媒体都支持。
 #### 1. 简单检测命令
-直接执行`detect.py`，指定一下要推理的目录即可，如果没有指定权重，会自动下载默认COCO预训练权重模型。手动下载：[Google Drive](https://drive.google.com/open?id=1Drs_Aiu7xx6S-ix95f9kNsA6ueKRpN2J) 、[阿里云盘下载地址](https://www.aliyundrive.com/s/xjxhgbMx12w) (将后缀jpg改为zip解压即可)。 
+直接执行`detect.py`，指定一下要推理的目录即可，如果没有指定权重，会自动下载默认COCO预训练权重模型。手动下载：[v6.0权重阿里云盘下载地址](https://www.aliyundrive.com/s/kTjosmxThR1) (将后缀改为zip解压即可)。 
 推理结果默认会保存到 `./runs/detect`中。
 ```bash
 # 快速推理，--source 指定检测源，以下任意一种类型都支持：
@@ -197,8 +236,8 @@ $ python detect.py --source ./data/images/ --weights ./weights/yolov5s.pt --conf
 #### 3. 检测指令说明
 
 自己根据需要加各种指令，新手只需关注带⭐的指令即可。
+<details> <summary> 有参 </summary>
 
-有参：
 - `--source`  (⭐)指定检测来源，详见上面的介绍
 - `--weights` (⭐)指定权重，不指定的话会使用yolov5s.pt预训练权重
 - `--img-size` `--imgsz` `--img` (⭐)指定推理图片分辨率，默认640，三个指令一样
@@ -210,8 +249,12 @@ $ python detect.py --source ./data/images/ --weights ./weights/yolov5s.pt --conf
 - `--project` 指定结果存放路径，默认./runs/detect/
 - `--name` 指定结果存放名,默认exp
 - `--line-thickness` 画图时线条宽度
+</details>
 
-无参：
+
+<details>
+<summary> 无参 </summary>
+
 - `--view-img` 图片形式显示结果
 - `--save-txt` 输出标签结果(yolo格式)
 - `--save-conf` 在输出标签结果txt中同样写入每个目标的置信度
@@ -226,10 +269,10 @@ $ python detect.py --source ./data/images/ --weights ./weights/yolov5s.pt --conf
 - `--hide-conf` 隐藏置信度
 - `--half` 半精度检测(FP16)
 - `--dnn` 在onnx推理中使用OpenCV DNN
+</details>
 
 
 ## 测试
-注意：测试代码已由`test.py`改名为`val.py`
 #### 1. 测试命令
 首先明确，推理是直接检测图片，而测试是需要图片有相应的真实标签的，相当于检测图片后再把推理标签和真实标签做mAP计算。  
 例如使用`./weights/yolov5x.pt`权重检测`./data/coco.yaml`里定义的测试集，图片分辨率设为672。
@@ -237,7 +280,9 @@ $ python detect.py --source ./data/images/ --weights ./weights/yolov5s.pt --conf
 $ python val.py --weights ./weights/yolov5x.pt --data ./data/coco.yaml --img 672
 ```
 #### 2. 各指令说明
-有参：
+<details>
+<summary> 有参 </summary>
+
 - `--weights` (⭐)测试所用权重，默认yolov5sCOCO预训练权重模型
 - `--data` (⭐)测试所用的.yaml文件，默认使用`./data/coco128.yaml`
 - `--batch-size` 测试用的batch大小，默认32，这个大小对结果无影响
@@ -248,8 +293,12 @@ $ python val.py --weights ./weights/yolov5x.pt --data ./data/coco.yaml --img 672
 - `--device` 指定设备，如`--device 0` `--device 0,1,2,3` `--device cpu`
 - `--project` 指定结果存放路径，默认./runs/test/
 - `--name` 指定结果存放名,默认exp
+</details>
 
-无参：
+
+<details>
+<summary> 无参 </summary>
+
 - `--single-cls` 所有类别视为一类
 - `--augment` 增强识别
 - `--verbose` 输出各个类别的mAP
@@ -259,10 +308,12 @@ $ python val.py --weights ./weights/yolov5x.pt --data ./data/coco.yaml --img 672
 - `--save-json` 保存结果为json
 - `--exist-ok` 若重名不覆盖
 - `--half` 半精度检测(FP16)
+</details>
 
 
 ## TODO
-翻译官方Tutorial的各个教程
+- [ ] 翻译官方Tutorial的各个教程
+- [ ] 建一个交流群
 
 ## 联系方式
 如有疑问可在[本repo的Issues](https://github.com/wudashuo/yolov5/issues)里提，我看到会及时回复。
