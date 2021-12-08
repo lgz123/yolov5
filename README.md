@@ -6,6 +6,7 @@
 现在`detect.py`支持推理的格式有：`.pt`, `.torchscript.pt`, `.onnx`, `_saved_model`, `.pb`, `.tflite`, `.engine`。
 - 训练时Dataloder加载数据默认`shuffle=True`
 - [**v6.0 版本**](https://github.com/ultralytics/yolov5/releases/tag/v6.0) ： 新增yolov5 nano模型，其他模型结构也有修改，模型转换/导出友好，精度基本不变，速度略有提升。
+___
 
 ## 目录
   * ### [简介](#简介-1)  
@@ -23,6 +24,7 @@
   * ### [测试](#测试-1) 
     * #### [测试命令](#1-测试命令)
     * #### [各指令说明](#2-各指令说明)
+___
 
 ## 简介
 本仓库Fork自Ultralytics公司出品的yolov5，原仓库地址为：[ultralytics/yolov5](https://github.com/ultralytics/yolov5) ，版权请参见原仓库[License](https://github.com/ultralytics/yolov5/blob/master/LICENSE)
@@ -52,7 +54,7 @@ yolov5按从小到大分为五个模型yolov5n、yolov5s、yolov5m、yolov5l、y
 
   
 **注意**：yolov5更新很快，永远建议使用最新版本代码，我不能及时更新的话请去官方repo下更新。
-
+___
 
 ## 依赖
 Python版本需要 ≥ 3.6.0，使用GPU的话要有CUDA环境。其他依赖都写在了[requirements.txt](https://github.com/wudashuo/yolov5/blob/master/requirements.txt) 里面。一键安装依赖的话，打开命令行，cd到yolov5的文件夹里，输入：
@@ -85,6 +87,7 @@ $ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 - **Docker Image**. [Docker 快速上手教程](https://github.com/ultralytics/yolov5/wiki/Docker-Quickstart) <a href="https://hub.docker.com/r/ultralytics/yolov5"><img src="https://img.shields.io/docker/pulls/ultralytics/yolov5?logo=docker" alt="Docker Pulls"></a>
 </details>
 
+___
 
 ## 训练
 #### 1. 简单复现训练
@@ -211,6 +214,7 @@ $ python train.py --batch 16 --epochs 5 --data ./data/coco128.yaml --weights ./w
 - `--upload_dataset` 上传数据集至W&B
 </details>
 
+___
 
 ## 检测
 推理支持多种模式，图片、视频、文件夹、rtsp视频流和流媒体都支持。
@@ -271,6 +275,7 @@ $ python detect.py --source ./data/images/ --weights ./weights/yolov5s.pt --conf
 - `--dnn` 在onnx推理中使用OpenCV DNN
 </details>
 
+___
 
 ## 测试
 #### 1. 测试命令
@@ -310,10 +315,13 @@ $ python val.py --weights ./weights/yolov5x.pt --data ./data/coco.yaml --img 672
 - `--half` 半精度检测(FP16)
 </details>
 
+___
 
 ## TODO
 - [ ] 翻译官方Tutorial的各个教程
 - [ ] 建一个交流群
+
+___
 
 ## 联系方式
 如有疑问可在[本repo的Issues](https://github.com/wudashuo/yolov5/issues)里提，我看到会及时回复。
@@ -322,5 +330,8 @@ $ python val.py --weights ./weights/yolov5x.pt --data ./data/coco.yaml --img 672
 
 个人联系方式：<wudashuo@gmail.com>
 
+___
+
 ## LICENSE
-遵循yolov5官方[LICENSE](https://github.com/ultralytics/yolov5/blob/master/LICENSE)
+遵循yolov5官方[LICENSE](https://github.com/ultralytics/yolov5/blob/master/LICENSE)  
+**本README所有内容禁止除fork外的任何形式的转载** 
